@@ -9,7 +9,7 @@
   },
   "author": "Joe Flateau",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "typescript": "^3.7.5"
   },
   "prettier": {
