@@ -1,0 +1,19 @@
+{
+  "name": "html-to-blocks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "rm -rf ./dist && tsc"
+  },
+  "author": "Joe Flateau",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^3.7.5"
+  },
+  "prettier": {
+    "printWidth": 110,
+    "trailingComma": "all"
+  }
+}
