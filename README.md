@@ -1,5 +1,9 @@
 # html-to-blocks
 
+## Stackblitz
+
+<https://stackblitz.com/edit/angular-html-to-blocks>
+
 ## Summary
 
 Use this package when you have a need to accept html from a CMS and parse/transform it into components. For example, if you need to extract videos, images, photo galleries, or other functionality from html a content manager enters in a CMS.
