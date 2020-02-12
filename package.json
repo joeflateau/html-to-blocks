@@ -1,7 +1,7 @@
 {
   "name": "html-to-blocks",
   "version": "1.0.3",
-  "description": "",
+  "description": "Use this package when you have a need to accept html from a CMS and parse/transform it into components.",
   "main": "dist/index.js",
   "files": [
     "dist"
