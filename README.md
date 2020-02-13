@@ -15,29 +15,35 @@ This library does not implement the way to format/display these blocks. The scop
 ## Usage (Angular)
 
 ```typescript
+import { Component, Input } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Block, BlockParser } from "html-to-blocks";
 
 @Component({
-  selector: "app-block-component",
+  selector: "app-blocks",
   template: `
     <ng-container *ngFor="let block of blocks">
       <div *ngIf="block.html" [innerHTML]="block.html"></div>
-      <iframe *ngIf="block.youtubeId" [src]="'https://www.youtube.com/embed/' + block.youtubeId"></iframe>
+      <iframe *ngIf="block.youtubeUrl" [src]="block.youtubeUrl"></iframe>
     </ng-container>
   `,
 })
-export class BlockComponent {
+export class BlocksComponent {
   blocks: Block[] = [];
   blockParser: BlockParser = new BlockParser();
+
+  constructor(private domSanitizer: DomSanitizer) {}
 
   @Input()
   set html(html: string) {
     this.blocks = this.blockParser.parseHtmlToBlocks(html, [
       {
         selector: "iframe[src*='youtube.com'],iframe[src*='youtu.be']",
-        factory: (iframe: HTMLIframeElement) => {
-          const youtubeId = parseYoutubeIdFromUrl(iframe.src);
-          return { youtubeId };
+        factory: (iframe: HTMLIFrameElement) => {
+          const youtubeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+            "https://www.youtube.com/embed/" + parseYoutubeIdFromUrl(iframe.src),
+          );
+          return { youtubeUrl };
         },
       },
     ]);
