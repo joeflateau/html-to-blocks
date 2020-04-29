@@ -3,7 +3,7 @@ export interface Block {
   [key: string]: any;
 }
 
-export type BlockFactory = (node: Element) => Block;
+export type BlockFactory = <T extends Element>(node: T) => Block;
 
 export interface BlockExtractor {
   selector: string;
@@ -23,8 +23,8 @@ export class BlockParser {
     const { body } = doc;
 
     const blockElementToBlockFactory = new Map<Element, BlockFactory>();
-    blockExtractors.forEach(extractor => {
-      Array.from(body.querySelectorAll(extractor.selector)).forEach(blockElement => {
+    blockExtractors.forEach((extractor) => {
+      Array.from(body.querySelectorAll(extractor.selector)).forEach((blockElement) => {
         splitWith(body, blockElement);
         blockElementToBlockFactory.set(blockElement, extractor.factory);
       });
@@ -37,7 +37,7 @@ export class BlockParser {
   }
 
   nodeToBlock(blockElementToBlockFactory: Map<Element, BlockFactory>): BlockFactory {
-    return node => {
+    return (node) => {
       const factory = blockElementToBlockFactory.get(node);
       if (factory != null) {
         return factory(node);
@@ -51,6 +51,7 @@ function splitWith(container: Element, splitElement: Element) {
   if (!getAncestors(splitElement).includes(container)) {
     throw new Error("'splitElement' must be a descendant of 'container'");
   }
+
   while (splitElement.parentElement?.parentElement != null && splitElement.parentElement !== container) {
     const parent = splitElement.parentElement;
     const parentChildren = Array.from(parent.childNodes);
@@ -58,11 +59,21 @@ function splitWith(container: Element, splitElement: Element) {
     const stepParent = parent.cloneNode() as HTMLElement;
     delete stepParent.id; // ensure we don't get duplicated ids if a parent has one
     const grandparent = parent.parentElement!;
-    grandparent.appendChild(splitElement);
-    grandparent.appendChild(stepParent);
-    lowerSiblings.forEach(sibling => {
+    const parentIndex = Array.from(grandparent.children).indexOf(parent);
+    insertAt(grandparent, splitElement, parentIndex + 1);
+    insertAt(grandparent, stepParent, parentIndex + 2);
+    lowerSiblings.forEach((sibling) => {
       stepParent.appendChild(sibling);
     });
+  }
+}
+
+function insertAt(container: Element, newChild: Element, index: number) {
+  const existingChildAtIndex = container.children[index];
+  if (existingChildAtIndex) {
+    container.insertBefore(newChild, existingChildAtIndex);
+  } else {
+    container.appendChild(newChild);
   }
 }
 

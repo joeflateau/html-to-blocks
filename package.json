@@ -8,12 +8,19 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "rm -rf ./dist && tsc"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test:watch": "NODE_ENV=test mocha -r ts-node/register --watch-extensions ts --extension ts --watch --recursive src/**/*.spec.ts",
+    "prepare": "npm run test && rm -rf ./dist && tsc"
   },
   "author": "Joe Flateau",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/jsdom": "^16.2.1",
+    "@types/mocha": "^7.0.2",
+    "chai": "^4.2.0",
+    "jsdom": "^16.2.2",
+    "mocha": "^7.1.2",
     "typescript": "^3.7.5"
   },
   "prettier": {
